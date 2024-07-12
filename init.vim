@@ -27,8 +27,6 @@ call plug#begin(stdpath('config').'/plugged')
   "Plug 'Pocco81/auto-save.nvim'
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   "Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-  "Plug 'vim-airline/vim-airline'
-  "Plug 'vim-airline/vim-airline-themes'
   "Plug 'folke/tokyonight.nvim'
   Plug 'joshdick/onedark.vim'
   Plug 'kylechui/nvim-surround'
@@ -42,9 +40,7 @@ call plug#end()
 colorscheme onedark
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#formatter = 'unique_tail'
-"let g:airline_powerline_fonts = 1
+
 nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 set termguicolors
 
