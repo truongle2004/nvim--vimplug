@@ -3,7 +3,7 @@
   "coc.source.around.shortcut": "?",
   //"suggest.disableKind": true,
   "suggest.completionItemKindLabels": {
-    "keyword": "\uf1de",
+    "keyword": "/uf1de",
     "variable": "\ue79b",
     "value": "\uf89f",
     "operator": "\u03a8",
@@ -36,8 +36,8 @@
   "javascript.suggest.autoImports": true,
   "javascript.suggest.names": true,
   "javascript.autoClosingTags": true,
-  //"java.jdt.ls.lombokSupport.enabled": true,
-  //"java.jdt.ls.vmargs": "-javaagent:C:\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok-1.18.32.jar -javaagent:\"C:\\Users\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok.jar\"",
+  "java.jdt.ls.lombokSupport.enabled": true,
+  "java.jdt.ls.vmargs": "-javaagent:C:\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok-1.18.32.jar -javaagent:\"C:\\Users\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok.jar\"",
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-19",
@@ -45,8 +45,8 @@
       "default": true
     }
   ],
-  //"java.trace.server": "verbose",
-  //"java.jdt.ls.java.home": "D:\\main\\jdk-19.0.2"
+  "java.trace.server": "verbose",
+  "java.jdt.ls.java.home": "D:\\main\\jdk-19.0.2",
   "inlayHint.display": false,
   "languageserver": {
     // C++
@@ -78,5 +78,10 @@
         "buildDirectory": "build"
       }
     }
-  }
+  },
+  "pyright.enable": true,
+  "coc.preferences.formatOnType": true,
+  "python.linting.enabled": true,
+  "python.formatting.blackPath": "C:/Users/truon/AppData/Local/Programs/Python/Python312/Lib/site-packages/black",
+  "python.formatting.provider": "black"
 }

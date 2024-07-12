@@ -1,14 +1,14 @@
 call plug#begin(stdpath('config').'/plugged')
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-tree/nvim-web-devicons'
-  Plug 'nvim-tree/nvim-tree.lua', {'on':'NvimTreeToggle'}
+  Plug 'nvim-tree/nvim-tree.lua', {'on': 'NvimTreeToggle'}
    "Plug 'voldikss/vim-floaterm'                  " Float terminal
   Plug 'neoclide/coc.nvim', 
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
   Plug 'mattn/emmet-vim' 
   Plug 'preservim/nerdcommenter'                " Comment code 
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  Plug 'junegunn/fzf.vim'
+  Plug 'junegunn/fzf.vim' 
   Plug 'alvan/vim-closetag', 
     \  { 
     \ 'do': 'yarn install '
@@ -16,7 +16,7 @@ call plug#begin(stdpath('config').'/plugged')
               \ .'&& yarn build',
       \ 'branch': 'main'}
 
-  "Plug 'sheerun/vim-polyglot'
+  Plug 'sheerun/vim-polyglot'
   "Plug 'puremourning/vimspector'                " Vimspector
   "Plug 'tpope/vim-fugitive'                     " Git infomation 
   "Plug 'tpope/vim-rhubarb' 
@@ -26,33 +26,47 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
   "Plug 'Pocco81/auto-save.nvim'
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-  "Plug 'nvim-lua/plenary.nvim'
-  "Plug 'tjdevries/express_line.nvim'
-  "Plug 'joshdick/onedark.vim'
-  Plug 'morhetz/gruvbox'
+  "Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+  "Plug 'vim-airline/vim-airline'
+  "Plug 'vim-airline/vim-airline-themes'
+  "Plug 'folke/tokyonight.nvim'
+  Plug 'joshdick/onedark.vim'
+  Plug 'kylechui/nvim-surround'
 call plug#end()
 
-"let g:UltiSnipsJumpForwardTrigger="<Tab>"
-"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-colorscheme gruvbox 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+"colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+"colorscheme tokyonight
+colorscheme onedark
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#formatter = 'unique_tail'
+"let g:airline_powerline_fonts = 1
+nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
+set termguicolors
+
+
+set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+
+xmap <leader>fo  <Plug>(coc-format-selected)
+nmap <leader>fo  <Plug>(coc-format-selected)
 lua<<EOF
 local map = vim.keymap.set
 --require("auto-save").setup {}
 --require("mini.fuzzy").setup()
-require("mini.surround").setup()
+--require("mini.surround").setup()
 require("mini.git").setup()
-require("mini.ai").setup()
+--require("mini.statusline").setup()
+--require("mini.ai").setup()
+require("nvim-surround").setup()
 --require("mini.cursorword").setup()
+require("mini.indentscope").setup()
 --require("mini.diff").setup()
---require("mini.indentscope").setup()
 require("mini.move").setup()
-require("mini.pairs").setup()
+--require("mini.pairs").setup()
 require("nvim-tree").setup({
 view = {
   width = 30
@@ -66,19 +80,16 @@ if vim.g.neovide then
 end
 local opt = vim.opt
 vim.g.mapleader = " "
-opt.cmdheight = 0
+--opt.cmdheight = 0
 opt.shell = "pwsh"
 opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
 opt.shellquote = ""
 opt.shellxquote = ""
 opt.termguicolors = true
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_netrwPlugin = 1
 opt.relativenumber = true
 opt.number = true
 opt.scrolloff = 10
---opt.laststatus = 3
+opt.laststatus = 3
 opt.tabstop = 2
 opt.shiftwidth = 2
 opt.expandtab = true
@@ -272,52 +283,6 @@ map({ "n", "v" }, "<leader><leader>w", ":HopAnywhere<cr>")
 map("n", "<leader>w", ":HopWord<cr>")
 
 
-
-map({'n','x'}, "zj", "<cmd>MultipleCursorsAddDown<CR>")
-map({'n','x'}, "zk", "<cmd>MultipleCursorsAddUp<CR>")
---[[local builtin = require "el.builtin"
-local extensions = require "el.extensions"
-local subscribe = require "el.subscribe"
-local sections = require "el.sections"
-local generator = function()
-      local segments = {}
-
-      table.insert(segments, extensions.mode)
-      table.insert(segments, " ")
-     table.insert(
-        segments,
-        subscribe.buf_autocmd("el-git-changes", "BufWritePost", function(win, buf)
-          local changes = extensions.git_changes(win, buf)
-          if changes then
-            return changes
-          end
-        end)
-      )
-     table.insert(segments,
-    subscribe.buf_autocmd(
-      "el_git_branch",
-      "BufEnter",
-      function(window, buffer)
-        local branch = extensions.git_branch(window, buffer)
-        if branch then
-          return branch
-        end
-      end
-    ))
-         table.insert(segments, sections.split)
-      table.insert(segments, "%f")
-      table.insert(segments, sections.split)
-      table.insert(segments, builtin.filetype)
-      table.insert(segments, "[")
-      table.insert(segments, builtin.line_with_width(3))
-      table.insert(segments, ":")
-      table.insert(segments, builtin.column_with_width(2))
-      table.insert(segments, "]")
-
-      return segments
-    end
-    require('el').setup({generator = generator})
---]]
 EOF
 
 
