@@ -83,5 +83,6 @@
   "coc.preferences.formatOnType": true,
   "python.linting.enabled": true,
   "python.formatting.blackPath": "C:/Users/truon/AppData/Local/Programs/Python/Python312/Lib/site-packages/black",
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "zig.zls.path": "C:\\Users\\truon\\AppData\\Local\\coc\\extensions\\coc-zls-data\\zls_install\\zls.exe"
 }

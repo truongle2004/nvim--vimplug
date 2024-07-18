@@ -24,12 +24,15 @@ call plug#begin(stdpath('config').'/plugged')
   "Plug 'samoshkin/vim-mergetool'                " Git merge
   "Plug 'tmhedberg/SimpylFold'
   Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
+
+  "Plug 'echasnovski/mini.icons'
   "Plug 'Pocco81/auto-save.nvim'
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   "Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
   "Plug 'folke/tokyonight.nvim'
-  Plug 'joshdick/onedark.vim'
+  "Plug 'joshdick/onedark.vim'
   Plug 'kylechui/nvim-surround'
+  Plug 'sainnhe/everforest'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -37,7 +40,8 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
 "colorscheme tokyonight
-colorscheme onedark
+colorscheme everforest
+"colorscheme evening
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
 
@@ -45,7 +49,7 @@ nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 set termguicolors
 
 
-set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+"set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
 
 xmap <leader>fo  <Plug>(coc-format-selected)
 nmap <leader>fo  <Plug>(coc-format-selected)
@@ -55,8 +59,9 @@ local map = vim.keymap.set
 --require("mini.fuzzy").setup()
 --require("mini.surround").setup()
 require("mini.git").setup()
---require("mini.statusline").setup()
+require("mini.statusline").setup()
 --require("mini.ai").setup()
+--require("mini.icons").setup()
 require("nvim-surround").setup()
 --require("mini.cursorword").setup()
 require("mini.indentscope").setup()
