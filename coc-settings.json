@@ -1,4 +1,6 @@
 {
+  "rust-analyzer.disableProgressNotifications": true,
+  "rust-analyzer.diagnostics.enable": false,
   "coc.source.file.shortcut": "File",
   "coc.source.around.shortcut": "?",
   //"suggest.disableKind": true,

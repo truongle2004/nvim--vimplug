@@ -16,7 +16,7 @@ call plug#begin(stdpath('config').'/plugged')
               \ .'&& yarn build',
       \ 'branch': 'main'}
 
-  Plug 'sheerun/vim-polyglot'
+  "Plug 'sheerun/vim-polyglot'
   "Plug 'puremourning/vimspector'                " Vimspector
   "Plug 'tpope/vim-fugitive'                     " Git infomation 
   "Plug 'tpope/vim-rhubarb' 
@@ -31,17 +31,29 @@ call plug#begin(stdpath('config').'/plugged')
   "Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
   "Plug 'folke/tokyonight.nvim'
   "Plug 'joshdick/onedark.vim'
+" Using Vim-Plug
+  Plug 'navarasu/onedark.nvim'
+  "Plug 'ellisonleao/gruvbox.nvim'
   Plug 'kylechui/nvim-surround'
-  Plug 'sainnhe/everforest'
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  "Plug 'sainnhe/everforest'
+  "Plug 'Mofiqul/vscode.nvim'
+  "Plug 'yuezk/vim-js' 
+  "Plug 'MaxMEllon/vim-jsx-pretty' 
+  "Plug 'HerringtonDarkholme/yats.vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+colorscheme retrobox
 "colorscheme tokyonight
-colorscheme everforest
+"colorscheme everforest
 "colorscheme evening
+"colorscheme vscode
+"colorscheme onedark
+"colorscheme gruvbox
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
 
@@ -55,6 +67,9 @@ xmap <leader>fo  <Plug>(coc-format-selected)
 nmap <leader>fo  <Plug>(coc-format-selected)
 lua<<EOF
 local map = vim.keymap.set
+require('onedark').setup  {
+    
+}
 --require("auto-save").setup {}
 --require("mini.fuzzy").setup()
 --require("mini.surround").setup()
@@ -70,11 +85,18 @@ require("mini.move").setup()
 --require("mini.pairs").setup()
 require("nvim-tree").setup({
 view = {
-  width = 30
+  width = 45
   }
 })
 
 require('mini.tabline').setup()
+
+local treesitter = require("nvim-treesitter.configs")
+treesitter.setup({
+  highlight = {
+    enable = true    
+  }
+})
 
 if vim.g.neovide then
   vim.o.guifont = ""
@@ -286,6 +308,18 @@ map("n", "<leader>w", ":HopWord<cr>")
 
 EOF
 
+"syntax match CustomDot "\."
+"syntax match CustomValue "\<[a-zA-Z_][a-zA-Z0-9_]*\(\.[a-zA-Z_][a-zA-Z0-9_]*\)\+\>"
+"highlight link CustomDot Identifier
+"highlight link CustomValue Constant
+
+highlight CustomDot ctermfg=Yellow guifg=Yellow
+highlight CustomValue ctermfg=Green guifg=LightMagenta
+
+augroup CustomSyntaxHighlighting
+  autocmd!
+  autocmd BufRead,BufNewFile * source ~/Appdata/local/nvim/after/syntax/custom.vim
+augroup END
 
 " Disable automatic comment in newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
