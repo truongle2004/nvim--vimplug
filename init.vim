@@ -2,7 +2,6 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-tree/nvim-web-devicons'
   Plug 'nvim-tree/nvim-tree.lua', {'on': 'NvimTreeToggle'}
-   "Plug 'voldikss/vim-floaterm'                  " Float terminal
   Plug 'neoclide/coc.nvim', 
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
   Plug 'mattn/emmet-vim' 
@@ -16,73 +15,34 @@ call plug#begin(stdpath('config').'/plugged')
               \ .'&& yarn build',
       \ 'branch': 'main'}
 
-  "Plug 'sheerun/vim-polyglot'
-  "Plug 'puremourning/vimspector'                " Vimspector
-  "Plug 'tpope/vim-fugitive'                     " Git infomation 
-  "Plug 'tpope/vim-rhubarb' 
-  "Plug 'airblade/vim-gitgutter'           
-  "Plug 'samoshkin/vim-mergetool'                " Git merge
-  "Plug 'tmhedberg/SimpylFold'
   Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
 
-  "Plug 'echasnovski/mini.icons'
-  "Plug 'Pocco81/auto-save.nvim'
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-  "Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-  "Plug 'folke/tokyonight.nvim'
-  "Plug 'joshdick/onedark.vim'
-" Using Vim-Plug
-  Plug 'navarasu/onedark.nvim'
-  "Plug 'ellisonleao/gruvbox.nvim'
   Plug 'kylechui/nvim-surround'
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-  "Plug 'sainnhe/everforest'
-  "Plug 'Mofiqul/vscode.nvim'
-  "Plug 'yuezk/vim-js' 
-  "Plug 'MaxMEllon/vim-jsx-pretty' 
-  "Plug 'HerringtonDarkholme/yats.vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-colorscheme retrobox
-"colorscheme tokyonight
-"colorscheme everforest
-"colorscheme evening
-"colorscheme vscode
-"colorscheme onedark
-"colorscheme gruvbox
+colorscheme evening
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
 
 nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 set termguicolors
+set foldmethod=indent
 
 
-"set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 xmap <leader>fo  <Plug>(coc-format-selected)
 nmap <leader>fo  <Plug>(coc-format-selected)
 lua<<EOF
 local map = vim.keymap.set
-require('onedark').setup  {
-    
-}
---require("auto-save").setup {}
---require("mini.fuzzy").setup()
---require("mini.surround").setup()
-require("mini.git").setup()
-require("mini.statusline").setup()
---require("mini.ai").setup()
---require("mini.icons").setup()
 require("nvim-surround").setup()
---require("mini.cursorword").setup()
-require("mini.indentscope").setup()
---require("mini.diff").setup()
 require("mini.move").setup()
---require("mini.pairs").setup()
 require("nvim-tree").setup({
 view = {
   width = 45
@@ -91,12 +51,6 @@ view = {
 
 require('mini.tabline').setup()
 
-local treesitter = require("nvim-treesitter.configs")
-treesitter.setup({
-  highlight = {
-    enable = true    
-  }
-})
 
 if vim.g.neovide then
   vim.o.guifont = ""
@@ -159,10 +113,7 @@ map("n", "<C-j>", "<C-d>")
 map("v", "<C-j>", "<C-d>")
 map("n", "<A-,>", ":bNext<CR>")
 map("n", "<A-.>", ":bnext<CR>")
-map("n", "<leader>s", ":w!<cr>")
 map("n", "<leader>ff" , ":FZF<cr>")
-map("n", "<leader>to" , ":FloatermNew<cr>")
-map("n", "<leader>tt" , ":FloatermToggle<cr>")
 map("n", "<leader><leader>f", ":Rg<cr>")
 
 local keyset = vim.keymap.set
@@ -173,8 +124,8 @@ function _G.check_back_space()
 end
 
 local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+keyset("i", "<C-j>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+keyset("i", "<C-k>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
 keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
@@ -280,7 +231,6 @@ vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", {na
 
 vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
 
---vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")
 
 local opts = {silent = true, nowait = true}
 keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
@@ -307,19 +257,6 @@ map("n", "<leader>w", ":HopWord<cr>")
 
 
 EOF
-
-"syntax match CustomDot "\."
-"syntax match CustomValue "\<[a-zA-Z_][a-zA-Z0-9_]*\(\.[a-zA-Z_][a-zA-Z0-9_]*\)\+\>"
-"highlight link CustomDot Identifier
-"highlight link CustomValue Constant
-
-highlight CustomDot ctermfg=Yellow guifg=Yellow
-highlight CustomValue ctermfg=Green guifg=LightMagenta
-
-augroup CustomSyntaxHighlighting
-  autocmd!
-  autocmd BufRead,BufNewFile * source ~/Appdata/local/nvim/after/syntax/custom.vim
-augroup END
 
 " Disable automatic comment in newline
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
