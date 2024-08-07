@@ -39,17 +39,6 @@
   "javascript.suggest.autoImports": true,
   "javascript.suggest.names": true,
   "javascript.autoClosingTags": true,
-  "java.jdt.ls.lombokSupport.enabled": true,
-  "java.jdt.ls.vmargs": "-javaagent:C:\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok-1.18.32.jar -javaagent:\"C:\\Users\\truon\\AppData\\Local\\coc\\extensions\\coc-lombok-data\\server\\lombok.jar\"",
-  "java.configuration.runtimes": [
-    {
-      "name": "JavaSE-19",
-      "path": "D:\\main\\jdk-19.0.2",
-      "default": true
-    }
-  ],
-  "java.trace.server": "verbose",
-  "java.jdt.ls.java.home": "D:\\main\\jdk-19.0.2",
   "inlayHint.display": false,
   "languageserver": {
     // C++
@@ -82,10 +71,9 @@
       }
     }
   },
-  "pyright.enable": true,
-  "coc.preferences.formatOnType": true,
-  "python.linting.enabled": true,
-  "python.formatting.blackPath": "C:/Users/truon/AppData/Local/Programs/Python/Python312/Lib/site-packages/black",
-  "python.formatting.provider": "black",
-  "zig.zls.path": "C:\\Users\\truon\\AppData\\Local\\coc\\extensions\\coc-zls-data\\zls_install\\zls.exe"
+  //"java.format.enabled": true,
+  //"java.jdt.ls.lombokSupport.enabled": false,
+  //"java.jdt.ls.vmargs": "-javaagent:D:/main/lombok-1.18.26.jar",
+  //"java.format.settings.profile": "GoogleStyle",
+  //"java.format.settings.url": "D:/main/google-java-format-1.23.0.jar",
 }
