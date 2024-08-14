@@ -35,10 +35,15 @@
   },
   "typescript.updateImportsOnFileMove.enabled": "always",
   "tsserver.disableAutomaticTypeAcquisition": true,
+  "javascript.suggest.jsdoc.generateReturns": true,
+  "javascript.showDeprecated": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.includeCompletionsForImportStatements": true,
+  "javascript.suggest.completeJSDocs": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.suggest.enabled": true,
   "javascript.suggest.autoImports": true,
   "javascript.suggest.names": true,
-  "javascript.autoClosingTags": true,
   "inlayHint.display": false,
   "languageserver": {
     // C++

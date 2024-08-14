@@ -1,13 +1,16 @@
+syntax on
+set signcolumn=yes
+set shada="NONE"
 call plug#begin(stdpath('config').'/plugged')
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-tree/nvim-web-devicons'
   Plug 'nvim-tree/nvim-tree.lua', {'on': 'NvimTreeToggle'}
   Plug 'neoclide/coc.nvim', 
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
-  Plug 'mattn/emmet-vim' 
-  Plug 'preservim/nerdcommenter'                " Comment code 
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  Plug 'junegunn/fzf.vim' 
+  Plug 'mattn/emmet-vim'
+  "Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  "Plug 'junegunn/fzf.vim' 
+  Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
   Plug 'alvan/vim-closetag', 
     \  { 
     \ 'do': 'yarn install '
@@ -19,12 +22,18 @@ call plug#begin(stdpath('config').'/plugged')
 
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   Plug 'kylechui/nvim-surround'
-call plug#end()
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  "Plug 'ellisonleao/gruvbox.nvim'
+  "Plug 'folke/tokyonight.nvim'
+  Plug 'nvim-lualine/lualine.nvim'
+  "Plug 'navarasu/onedark.nvim'
+  Plug 'craftzdog/solarized-osaka.nvim'
+cal plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-colorscheme evening
+
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
 
@@ -32,15 +41,44 @@ nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 set termguicolors
 set foldmethod=indent
 
-
-set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+"set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-xmap <leader>fo  <Plug>(coc-format-selected)
-nmap <leader>fo  <Plug>(coc-format-selected)
 lua<<EOF
 local map = vim.keymap.set
+ require('lualine').setup()
+ -- require("gruvbox").setup({
+ --     terminal_colors = true, -- add neovim terminal colors
+ --     undercurl = true,
+ --     underline = true,
+ --     bold = true,
+ --     italic = {
+ --       strings = false,
+ --       emphasis = false,
+ --       comments = false,
+ --       operators = false,
+ --       folds = false,
+ --     },
+ --
+ --   transparent_mode = false,
+ --   })
+ --  vim.cmd("colorscheme gruvbox")
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+     enable = true 
+  },
+}
+require("solarized-osaka").setup({
+   transparent = false,
+   styles = {
+      comments = { italic = false },
+      keywords = { italic = false },
+      functions = {},
+      variables = {},
+    },
+})
+vim.cmd[[colorscheme solarized-osaka]]
 require("nvim-surround").setup()
 require("mini.move").setup()
 require("nvim-tree").setup({
@@ -50,8 +88,27 @@ view = {
 })
 
 require('mini.tabline').setup()
+-- require("tokyonight").setup({
+--   styles = {
+--     comments = { italic = false },
+--     keywords = { italic = false },
+--   },
+-- })
+-- vim.cmd[[colorscheme tokyonight]]
 
+-- require('onedark').setup  {
+--     -- Main options --
+--     -- style = 'warm', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+--     transparent = false,  -- Show/hide background
+--
 
+--     -- Lualine options --
+--     lualine = {
+--         transparent = false, -- lualine center bar transparency
+--     },
+-- }
+--
+-- vim.cmd[[ colorscheme onedark ]]
 if vim.g.neovide then
   vim.o.guifont = ""
 end
@@ -83,9 +140,23 @@ opt.clipboard:append("unnamedplus")
 opt.splitright = true
 opt.splitbelow = true
 opt.swapfile = false
-vim.opt.splitbelow = true -- split windows below
-vim.opt.splitright = true -- split windows right
+opt.splitbelow = true -- split windows below
+opt.splitright = true -- split windows right
+opt.colorcolumn = "79"
+vim.o.wrap = true
 
+-- Enable lazyredraw for better performance during macros and complex operations
+vim.o.lazyredraw = true
+
+-- Assume fast terminal connection
+vim.o.ttyfast = true
+
+-- Set the update time for writing to the swap file and triggering CursorHold events (in milliseconds)
+vim.o.updatetime = 300
+
+vim.o.termguicolors = true
+
+vim.api.nvim_set_keymap('t', '<C-x>', [[<C-\><C-n>]], { noremap = true, silent = true })
 
 map("i", "<C-j>", "<down>")
 map("i", "<C-k>", "<up>")
@@ -113,8 +184,9 @@ map("n", "<C-j>", "<C-d>")
 map("v", "<C-j>", "<C-d>")
 map("n", "<A-,>", ":bNext<CR>")
 map("n", "<A-.>", ":bnext<CR>")
-map("n", "<leader>ff" , ":FZF<cr>")
-map("n", "<leader><leader>f", ":Rg<cr>")
+map("n", "<leader>ff" , ":FzfLua files<cr>")
+map("n", "<leader><leader>f", ":FzfLua grep_project<cr>")
+map("v", "<leader>l", "$y<cr>")
 
 local keyset = vim.keymap.set
 
@@ -124,8 +196,8 @@ function _G.check_back_space()
 end
 
 local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-keyset("i", "<C-j>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-keyset("i", "<C-k>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
 keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
