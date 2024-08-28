@@ -23,11 +23,11 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   Plug 'kylechui/nvim-surround'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-  "Plug 'ellisonleao/gruvbox.nvim'
-  "Plug 'folke/tokyonight.nvim'
-  Plug 'nvim-lualine/lualine.nvim'
+  Plug 'ellisonleao/gruvbox.nvim'
+  Plug 'folke/tokyonight.nvim'
+  "Plug 'nvim-lualine/lualine.nvim'
   "Plug 'navarasu/onedark.nvim'
-  Plug 'craftzdog/solarized-osaka.nvim'
+  "Plug 'craftzdog/solarized-osaka.nvim'
 cal plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -46,39 +46,42 @@ set foldmethod=indent
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 lua<<EOF
+
+
+
 local map = vim.keymap.set
- require('lualine').setup()
+ -- require('lualine').setup()
  -- require("gruvbox").setup({
- --     terminal_colors = true, -- add neovim terminal colors
- --     undercurl = true,
- --     underline = true,
- --     bold = true,
- --     italic = {
- --       strings = false,
- --       emphasis = false,
- --       comments = false,
- --       operators = false,
- --       folds = false,
- --     },
+ -- terminal_colors = true, -- add neovim terminal colors
+ -- undercurl = true,
+ -- underline = true,
+ -- bold = true,
+ -- italic = {
+ --   strings = false,
+ --   emphasis = false,
+ --   comments = false,
+ --   operators = false,
+ --   folds = false,
+ -- },
  --
- --   transparent_mode = false,
- --   })
- --  vim.cmd("colorscheme gruvbox")
-require'nvim-treesitter.configs'.setup {
-  highlight = {
-     enable = true 
-  },
-}
-require("solarized-osaka").setup({
-   transparent = false,
-   styles = {
-      comments = { italic = false },
-      keywords = { italic = false },
-      functions = {},
-      variables = {},
-    },
-})
-vim.cmd[[colorscheme solarized-osaka]]
+ -- transparent_mode = false,
+ -- })
+ -- vim.cmd("colorscheme gruvbox")
+ require'nvim-treesitter.configs'.setup {
+   highlight = {
+      enable = true 
+   },
+ }
+-- require("solarized-osaka").setup({
+--    transparent = false,
+--    styles = {
+--       comments = { italic = false },
+--       keywords = { italic = false },
+--       functions = {},
+--       variables = {},
+--     },
+-- })
+-- vim.cmd[[colorscheme solarized-osaka]]
 require("nvim-surround").setup()
 require("mini.move").setup()
 require("nvim-tree").setup({
@@ -88,27 +91,27 @@ view = {
 })
 
 require('mini.tabline').setup()
--- require("tokyonight").setup({
---   styles = {
---     comments = { italic = false },
---     keywords = { italic = false },
---   },
--- })
--- vim.cmd[[colorscheme tokyonight]]
+require("tokyonight").setup({
+  styles = {
+    comments = { italic = false },
+    keywords = { italic = false },
+  },
+})
+vim.cmd[[colorscheme tokyonight]]
 
--- require('onedark').setup  {
---     -- Main options --
---     -- style = 'warm', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
---     transparent = false,  -- Show/hide background
---
+ -- require('onedark').setup  {
+ --     -- Main options --
+ --     -- style = 'warm', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+ --     transparent = false,  -- Show/hide background
+ --
+ --
+ --     -- Lualine options --
+ --     lualine = {
+ --         transparent = false, -- lualine center bar transparency
+ --     },
+ -- }
 
---     -- Lualine options --
---     lualine = {
---         transparent = false, -- lualine center bar transparency
---     },
--- }
---
--- vim.cmd[[ colorscheme onedark ]]
+ -- vim.cmd[[ colorscheme onedark ]]
 if vim.g.neovide then
   vim.o.guifont = ""
 end
@@ -124,8 +127,22 @@ opt.relativenumber = true
 opt.number = true
 opt.scrolloff = 10
 opt.laststatus = 3
-opt.tabstop = 2
-opt.shiftwidth = 2
+
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2"
+})
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "cpp",
+    command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4"
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "rust",
+    command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4"
+})
+
 opt.expandtab = true
 opt.autoindent = true
 opt.wrap = false
@@ -187,6 +204,10 @@ map("n", "<A-.>", ":bnext<CR>")
 map("n", "<leader>ff" , ":FzfLua files<cr>")
 map("n", "<leader><leader>f", ":FzfLua grep_project<cr>")
 map("v", "<leader>l", "$y<cr>")
+map("n", "<leader>te", ":lua require('treesitter-unit')<cr>")
+
+
+vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:!g++ -o %<.out % && ./%<.out<CR>', { noremap = true, silent = true })
 
 local keyset = vim.keymap.set
 
