@@ -1,6 +1,7 @@
 syntax on
 set signcolumn=yes
 set shada="NONE"
+ 
 call plug#begin(stdpath('config').'/plugged')
   Plug 'phaazon/hop.nvim'
   Plug 'nvim-tree/nvim-web-devicons'
@@ -8,8 +9,6 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'neoclide/coc.nvim', 
     \ {'branch': 'release'}                     " Language server protocol (LSP) 
   Plug 'mattn/emmet-vim'
-  "Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  "Plug 'junegunn/fzf.vim' 
   Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
   Plug 'alvan/vim-closetag', 
     \  { 
@@ -22,332 +21,67 @@ call plug#begin(stdpath('config').'/plugged')
 
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   Plug 'kylechui/nvim-surround'
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-  Plug 'ellisonleao/gruvbox.nvim'
-  Plug 'folke/tokyonight.nvim'
-  "Plug 'nvim-lualine/lualine.nvim'
-  "Plug 'navarasu/onedark.nvim'
-  "Plug 'craftzdog/solarized-osaka.nvim'
+   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'Exafunction/codeium.vim'
+  Plug 'navarasu/onedark.nvim'
+  " Plug 'craftzdog/solarized-osaka.nvim'
+  Plug 'lualine/lualine.nvim'
+    Plug 'numToStr/Comment.nvim'
+  Plug 'folke/ts-comments.nvim'
+   Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 cal plug#end()
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin Setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
-command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
+command! -nargs=0 Eslint :CocCommand eslint.excuteAutofix
 
 nnoremap <silent> <leader>bd :bp \| sp \| bn \| bd<CR>
 set termguicolors
 set foldmethod=indent
 
-"set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+set statusline^=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+
+
 lua<<EOF
 
+require('ts-comments').setup()
 
+require('ts_context_commentstring').setup {
+  enable_autocmd = false,
+}
 
-local map = vim.keymap.set
- -- require('lualine').setup()
- -- require("gruvbox").setup({
- -- terminal_colors = true, -- add neovim terminal colors
- -- undercurl = true,
- -- underline = true,
- -- bold = true,
- -- italic = {
- --   strings = false,
- --   emphasis = false,
- --   comments = false,
- --   operators = false,
- --   folds = false,
- -- },
- --
- -- transparent_mode = false,
- -- })
- -- vim.cmd("colorscheme gruvbox")
- require'nvim-treesitter.configs'.setup {
-   highlight = {
-      enable = true 
-   },
+require('Comment').setup {
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+}
+
+require('onedark').setup  {
+     transparent = true,  -- Show/hide background
  }
+
+vim.cmd[[ colorscheme onedark ]]
 -- require("solarized-osaka").setup({
---    transparent = false,
---    styles = {
---       comments = { italic = false },
---       keywords = { italic = false },
---       functions = {},
---       variables = {},
---     },
+--   -- your configuration comes here
+--   -- or leave it empty to use the default settings
+--   transparent = true, -- Enable this to disable setting the background color
+--   terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+--   styles = {
+--     -- Style to be applied to different syntax groups
+--     -- Value is any valid attr-list value for `:help nvim_set_hl`
+--     comments = { italic = false},
+--     keywords = { italic = false},
+--   },
 -- })
 -- vim.cmd[[colorscheme solarized-osaka]]
-require("nvim-surround").setup()
-require("mini.move").setup()
-require("nvim-tree").setup({
-view = {
-  width = 45
-  }
-})
-
-require('mini.tabline').setup()
-require("tokyonight").setup({
-  styles = {
-    comments = { italic = false },
-    keywords = { italic = false },
-  },
-})
-vim.cmd[[colorscheme tokyonight]]
-
- -- require('onedark').setup  {
- --     -- Main options --
- --     -- style = 'warm', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
- --     transparent = false,  -- Show/hide background
- --
- --
- --     -- Lualine options --
- --     lualine = {
- --         transparent = false, -- lualine center bar transparency
- --     },
- -- }
-
- -- vim.cmd[[ colorscheme onedark ]]
-if vim.g.neovide then
-  vim.o.guifont = ""
-end
-local opt = vim.opt
-vim.g.mapleader = " "
---opt.cmdheight = 0
-opt.shell = "pwsh"
-opt.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
-opt.shellquote = ""
-opt.shellxquote = ""
-opt.termguicolors = true
-opt.relativenumber = true
-opt.number = true
-opt.scrolloff = 10
-opt.laststatus = 3
-
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "*",
-    command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2"
-})
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "cpp",
-    command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4"
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "rust",
-    command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4"
-})
-
-opt.expandtab = true
-opt.autoindent = true
-opt.wrap = false
-opt.ignorecase = true
-opt.smartcase = true
-opt.cursorline = true
-opt.termguicolors = true
-opt.background = "dark"
-opt.signcolumn = "yes"
-opt.backspace = "indent,eol,start"
-opt.clipboard:append("unnamedplus")
-opt.splitright = true
-opt.splitbelow = true
-opt.swapfile = false
-opt.splitbelow = true -- split windows below
-opt.splitright = true -- split windows right
-opt.colorcolumn = "79"
-vim.o.wrap = true
-
--- Enable lazyredraw for better performance during macros and complex operations
-vim.o.lazyredraw = true
-
--- Assume fast terminal connection
-vim.o.ttyfast = true
-
--- Set the update time for writing to the swap file and triggering CursorHold events (in milliseconds)
-vim.o.updatetime = 300
-
-vim.o.termguicolors = true
-
-vim.api.nvim_set_keymap('t', '<C-x>', [[<C-\><C-n>]], { noremap = true, silent = true })
-
-map("i", "<C-j>", "<down>")
-map("i", "<C-k>", "<up>")
-map("i", "<C-h>", "<left>")
-map("i", "<C-l>", "<right>")
-map("n", ";", ":", { desc = "CMD enter command mode" })
-map("i", "jj", "<ESC>")
-map("i", "jk", "<ESC>")
-map("n", "<leader>m", ":NvimTreeToggle<CR>")
-map("n", "<leader>n", ":NvimTreeFocus<CR>")
-map("n", "<esc>", ":noh<cr>")
-map("n", "<M-right>", ":vertical resize +1<CR>")
-map("n", "<M-left>", ":vertical resize -1<CR>")
-map("n", "<M-Down>", ":resize +1<CR>")
-map("n", "<M-Up>", ":resize -1<CR>")
-map("n", "ee", "$")
-map("n", "<space>h", "<c-w>h")
-map("n", "<space>j", "<c-w>j")
-map("n", "<space>k", "<c-w>k")
-map("n", "<space>l", "<c-w>l")
-map("n", "<C-a>", "ggVG")
-map("n", "<C-k>", "<C-u>")
-map("v", "<C-k>", "<C-u>")
-map("n", "<C-j>", "<C-d>")
-map("v", "<C-j>", "<C-d>")
-map("n", "<A-,>", ":bNext<CR>")
-map("n", "<A-.>", ":bnext<CR>")
-map("n", "<leader>ff" , ":FzfLua files<cr>")
-map("n", "<leader><leader>f", ":FzfLua grep_project<cr>")
-map("v", "<leader>l", "$y<cr>")
-map("n", "<leader>te", ":lua require('treesitter-unit')<cr>")
-
-
-vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:!g++ -o %<.out % && ./%<.out<CR>', { noremap = true, silent = true })
-
-local keyset = vim.keymap.set
-
-function _G.check_back_space()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-end
-
-local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-
-keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
---keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
-keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
-keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
-
-keyset("n", "gd", "<Plug>(coc-definition)", {silent = true})
-keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-keyset("n", "gr", "<Plug>(coc-references)", {silent = true})
-
-
-function _G.show_docs()
-    local cw = vim.fn.expand('<cword>')
-    if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
-        vim.api.nvim_command('h ' .. cw)
-    elseif vim.api.nvim_eval('coc#rpc#ready()') then
-        vim.fn.CocActionAsync('doHover')
-    else
-        vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
-    end
-end
-keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
-
--- Highlight the symbol and its references on a CursorHold event(cursor is idle)
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-    group = "CocGroup",
-    command = "silent call CocActionAsync('highlight')",
-    desc = "Highlight symbol under cursor on CursorHold"
-})
-
-
--- Symbol renaming
-keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
-
-
--- Formatting selected code
-keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-keyset("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-
-
--- Setup formatexpr specified filetype(s)
-vim.api.nvim_create_autocmd("FileType", {
-    group = "CocGroup",
-    pattern = "typescript,json",
-    command = "setl formatexpr=CocAction('formatSelected')",
-    desc = "Setup formatexpr specified filetype(s)."
-})
-
--- Update signature help on jump placeholder
-vim.api.nvim_create_autocmd("User", {
-    group = "CocGroup",
-    pattern = "CocJumpPlaceholder",
-    command = "call CocActionAsync('showSignatureHelp')",
-    desc = "Update signature help on jump placeholder"
-})
-
-local opts = {silent = true, nowait = true}
-keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-
-keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
-keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
-keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
-
-keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
-keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
-
-
-keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
-keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
-keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
-keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
-keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
-keyset("o", "ic", "<Plug>(coc-classobj-i)", pts)
-keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
-keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
-
-
-local opts = {silent = true, nowait = true, expr = true}
-keyset("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-keyset("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-keyset("i", "<C-f>",
-       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-keyset("i", "<C-b>",
-       'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-
-
-keyset("n", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
-keyset("x", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
-
-
-vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
-
-vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", {nargs = '?'})
-
-vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
-
-
-local opts = {silent = true, nowait = true}
-keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
-keyset("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
-keyset("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
-keyset("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
-keyset("n", "<space>s", ":<C-u>CocList -I symbols<cr>", opts)
-keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
-keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
-keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
-
-
-require("hop").setup({ keys = "etovxqpdygfblzhckisuran" })
-local hop = require("hop")
-local directions = require("hop.hint").HintDirection
-vim.keymap.set("n", "f", function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set("n", "F", function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, { remap = true })
-map({ "n", "v" }, "<leader><leader>w", ":HopAnywhere<cr>")
-map("n", "<leader>w", ":HopWord<cr>")
-
+require('core')
+require('coc_config')
+require('config')
 
 EOF
 

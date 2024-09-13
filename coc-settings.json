@@ -76,9 +76,9 @@
       }
     }
   },
-  //"java.format.enabled": true,
-  //"java.jdt.ls.lombokSupport.enabled": false,
-  //"java.jdt.ls.vmargs": "-javaagent:D:/main/lombok-1.18.26.jar",
-  //"java.format.settings.profile": "GoogleStyle",
-  //"java.format.settings.url": "D:/main/google-java-format-1.23.0.jar",
+  "java.format.enabled": true,
+  "java.jdt.ls.lombokSupport.enabled": false,
+  "java.jdt.ls.vmargs": "-javaagent:D:/main/lombok-1.18.26.jar",
+  "java.format.settings.profile": "GoogleStyle",
+  "java.format.settings.url": "D:/main/google-java-format-1.23.0.jar",
 }
